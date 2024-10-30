@@ -1,24 +1,35 @@
-const Produtos = require('../models/produtosModel')
+const produtosService = require('../services/produtosService');
 
 exports.getAllProdutos = (req, res) => {
-    Produtos.getAll((err, results) => {
+    produtosService.getAllProdutos((err, results) => {
         if (err) {
-            res.status(500).send('Erro ao buscar produtos')
+            res.status(500).send(err);
         } else {
             res.json(results);
         }
     });
-}
+};
 
 exports.getProdutoById = (req, res) => {
     const id = req.params.id;
-    Produtos.getById(id, (err, results) => {
+    produtosService.getProdutoById(id, (err, result) => {
         if (err) {
-            res.status(500).send('Erro ao buscar produto'); 
-        } else if (results.length == 0) {
-            res.status(404).send('Nenhum produto encontrado')
+            res.status(500).send(err);
         } else {
-            res.json(results[0]);
+            res.json(result);
         }
     });
-}
+};
+
+exports.updateStock = (req, res) => {
+    const id = req.params.id;
+    const newStock = req.body.qtd;
+
+    produtosService.updateStock(id, newStock, (err, message) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.send(message);
+        }
+    });
+};

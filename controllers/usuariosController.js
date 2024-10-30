@@ -1,10 +1,9 @@
-const Usuarios = require('../models/usuariosModel')
-
+const usuariosService = require('../services/usuariosService');
 
 exports.getAllUsuarios = (req, res) => {
-    Usuarios.getAll((err, results) => {
+    usuariosService.getAllUsuarios((err, results) => {
         if (err) {
-            res.status(500).send('Erro ao buscar usuarios')
+            res.status(500).send(err);
         } else {
             res.json(results);
         }
@@ -13,13 +12,11 @@ exports.getAllUsuarios = (req, res) => {
 
 exports.getUsuarioById = (req, res) => {
     const id = req.params.id;
-    Usuarios.getById(id, (err, results) => {
+    usuariosService.getUsuarioById(id, (err, result) => {
         if (err) {
-            res.status(500).send('Erro ao buscar usuario');
-        } else if (results.length == 0) {
-            res.status(404).send('Nenhum usuario encontrado')
-        } else
-            res.json(results[0])
-
+            res.status(500).send(err);
+        } else {
+            res.json(result);
+        }
     });
 };
