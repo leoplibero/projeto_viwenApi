@@ -1,22 +1,20 @@
 const usuariosService = require('../services/usuariosService');
 
-exports.getAllUsuarios = (req, res) => {
-    usuariosService.getAllUsuarios((err, results) => {
-        if (err) {
-            res.status(500).send(err);
-        } else {
-            res.json(results);
-        }
-    });
+exports.getAllUsuarios = async (req, res) => {
+    try {
+        const results = await usuariosService.getAllUsuarios();
+        res.json(results);
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
 };
 
-exports.getUsuarioById = (req, res) => {
-    const id = req.params.id;
-    usuariosService.getUsuarioById(id, (err, result) => {
-        if (err) {
-            res.status(500).send(err);
-        } else {
-            res.json(result);
-        }
-    });
+exports.getUsuarioById = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const result = await usuariosService.getUsuarioById(id);
+        res.json(result);
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
 };

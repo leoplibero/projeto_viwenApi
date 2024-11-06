@@ -1,23 +1,35 @@
 const Usuarios = require('../models/usuariosModel');
 
-exports.getAllUsuarios = (callback) => {
-    Usuarios.getAll((err, results) => {
-        if (err) {
-            callback('Erro ao buscar usuários', null);
-        } else {
-            callback(null, results);
+exports.getAllUsuarios = () => {
+    return new Promise((resolve, reject) => {
+        try {
+            Usuarios.getAll((err, results) => {
+                if (err) {
+                    reject(new Error('Erro ao buscar usuários'));
+                } else {
+                    resolve(results);
+                }
+            });
+        } catch (error) {
+            reject(new Error('Erro inesperado ao buscar usuários'));
         }
     });
 };
 
-exports.getUsuarioById = (id, callback) => {
-    Usuarios.getById(id, (err, results) => {
-        if (err) {
-            callback('Erro ao buscar usuário', null);
-        } else if (results.length === 0) {
-            callback('Nenhum usuário encontrado', null);
-        } else {
-            callback(null, results[0]);
+exports.getUsuarioById = (id) => {
+    return new Promise((resolve, reject) => {
+        try {
+            Usuarios.getById(id, (err, results) => {
+                if (err) {
+                    reject(new Error('Erro ao buscar usuário'));
+                } else if (results.length === 0) {
+                    reject(new Error('Nenhum usuário encontrado'));
+                } else {
+                    resolve(results[0]);
+                }
+            });
+        } catch (error) {
+            reject(new Error('Erro inesperado ao buscar usuário'));
         }
     });
 };
