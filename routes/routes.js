@@ -4,8 +4,9 @@ module.exports = function (app) {
     const pedidosController = require('../controllers/pedidosController.js');
 
     // Rotas de usuário
-    app.get('/usuarios', usuarioController.getAllUsuarios);
-    app.get('/usuarios/:id', usuarioController.getUsuarioById);
+    app.get('/usuarios', usuarioController.getAllUsuarios); // usuario admin
+    app.get('/usuarios/:id', usuarioController.getUsuarioById); // usuario admin
+    //criar usuario cliente
 
     // Rotas de produto
     app.get('/produtos', produtoController.getAllProdutos);
