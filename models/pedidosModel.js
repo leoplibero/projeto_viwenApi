@@ -3,7 +3,7 @@ const db = require('../db');
 // Função para criar um novo pedido
 const createPedido = async (pedido) => {
     const { usuarioId, produtoId, quantidade, valorPedido } = pedido;
-    const query = 'INSERT INTO pedidos (usuarioId, produtoId, quantidade, valorPedido) VALUES (?, ?, ?, ?)';
+    const query = 'INSERT INTO pedidos (usuarioId, produtoId, quantidade, valorPedido, status ) VALUES (?, ?, ?, ?, ?)';
 
     try {
         const results = await new Promise((resolve, reject) => {

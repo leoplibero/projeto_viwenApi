@@ -14,7 +14,8 @@ const criarPedido = async (body) => {
         usuarioId: body.usuarioId,
         produtoId: body.produtoId,
         quantidade: body.quantidade,
-        valorPedido: body.valorPedido
+        valorPedido: body.valorPedido,
+        status: 'novo'
     };
 
     try {

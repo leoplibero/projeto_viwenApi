@@ -2,11 +2,16 @@ module.exports = function (app) {
     const usuarioController = require('../controllers/usuariosController.js');
     const produtoController = require('../controllers/produtosController.js');
     const pedidosController = require('../controllers/pedidosController.js');
+    const clienteController = require('../controllers/clientesController.js');
+    const {autenticar} = require('../middleware.js');
 
     // Rotas de usuário
     app.get('/usuarios', usuarioController.getAllUsuarios); // usuario admin
     app.get('/usuarios/:id', usuarioController.getUsuarioById); // usuario admin
-    //criar usuario cliente
+
+    //Rotas de cliente
+    app.get('/login/:id', autenticar, clienteController.getClienteById);
+    app.post('/cadastro', clienteController.createCliente);
 
     // Rotas de produto
     app.get('/produtos', produtoController.getAllProdutos);
