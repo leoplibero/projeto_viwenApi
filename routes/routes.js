@@ -10,7 +10,7 @@ module.exports = function (app) {
     app.get('/usuarios/:id', usuarioController.getUsuarioById); // usuario admin
 
     //Rotas de cliente
-    app.get('/login/:id', autenticar, clienteController.getClienteById);
+    app.get('/login/:email', autenticar, clienteController.getClienteByEmail);
     app.post('/cadastro', clienteController.createCliente);
 
     // Rotas de produto
