@@ -5,17 +5,6 @@ exports.createCliente = (cliente, callback) => {
     db.query(query, [cliente.nome, cliente.email, cliente.senha], callback);
 };
 
-exports.getClienteById = (id, callback) => {
-    const query = 'SELECT * FROM clientes WHERE id = ?';
-    db.query(query, [id], callback);
-};
-
-exports.getAllClientes = (callback) => {
-    const query = 'SELECT * FROM clientes';
-    db.query(query, callback);
-};
-
-exports.getClienteByEmail = (email, callback) => {
-    const query = 'SELECT * FROM clientes WHERE email = ?';
-    db.query(query, [email], callback);
+exports.getClienteByEmail = (email, callback) =>{
+    db.query('SELECT * FROM clientes WHERE email = ?', [email], callback);
 };

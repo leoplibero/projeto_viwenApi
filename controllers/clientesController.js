@@ -15,7 +15,7 @@ exports.createCliente = async (req, res) => {
 
 exports.getClienteById = async (req, res) => {
     try {
-        const result = await clienteService.getClienteById(req.params.id);
+        const result = await clienteService.getClienteById(req.body);
         if (!result) {
             res.status(404).send('Cliente não encontrado'); 
         } else {
@@ -37,7 +37,7 @@ exports.getAllClientes = async (req, res) => {
 
 exports.getClienteByEmail = async (req, res) => {
     try {
-        const result = await clienteService.getClienteByEmail(req.params.email);
+        const result = await clienteService.getClienteByEmail(req.body.email);
         if (!result) {
             res.status(404).send('Cliente não encontrado'); 
         } else {
