@@ -2,12 +2,12 @@ const db = require('../db');
 
 // Função para criar um novo pedido
 const createPedido = async (pedido) => {
-    const { usuarioId, produtoId, quantidade, valorPedido } = pedido;
-    const query = 'INSERT INTO pedidos (usuarioId, produtoId, quantidade, valorPedido, status ) VALUES (?, ?, ?, ?, ?)';
+    const { usuarioId, produtoId, quantidade, valorPedido, status } = pedido;
+    const query = 'INSERT INTO pedidos (usuarioId, produtoId, quantidade, valorPedido, status) VALUES (?, ?, ?, ?, ?)';
 
     try {
         const results = await new Promise((resolve, reject) => {
-            db.query(query, [usuarioId, produtoId, quantidade, valorPedido], (err, results) => {
+            db.query(query, [usuarioId, produtoId, quantidade, valorPedido, status], (err, results) => {
                 if (err) {
                     return reject(err);
                 }
@@ -39,27 +39,7 @@ const getPedidoById = async (id) => {
     }
 };
 
-// Função para deletar um pedido pelo ID
-const deletePedido = async (id) => {
-    const query = 'DELETE FROM pedidos WHERE id = ?';
-
-    try {
-        const results = await new Promise((resolve, reject) => {
-            db.query(query, [id], (err, results) => {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(results);
-            });
-        });
-        return results.affectedRows;
-    } catch (error) {
-        throw new Error('Erro ao deletar pedido: ' + error.message);
-    }
-};
-
 module.exports = {
     createPedido,
-    getPedidoById,
-    deletePedido
+    getPedidoById
 };
