@@ -1,36 +1,55 @@
 const pedidosService = require('../services/pedidosService');
 
-
 const getPedidoById = async (req, res) => {
     try {
-        const pedido = await pedidosService.getPedidoById(req.params.id);
+        const { id } = req.params;
+        if (isNaN(id)) {
+            return res.status(400).json({ message: 'ID do pedido inválido.' });
+        }
+
+        const pedido = await pedidosService.getPedidoById(id);
         if (!pedido) {
             return res.status(404).json({ message: 'Pedido não encontrado' });
         }
         res.status(200).json(pedido);
     } catch (error) {
-        res.status(500).json({ message: 'Erro ao buscar pedido', error });
+        console.error('Erro ao buscar pedido:', error);
+        res.status(500).json({ message: 'Erro ao buscar pedido', error: error.message });
     }
 };
 
 const createPedido = async (req, res) => {
     try {
+        const { usuarioId, produtos, quantidade, valorPedido } = req.body;
+        if (!usuarioId || !Array.isArray(produtos) || produtos.length === 0 || !quantidade || !valorPedido) {
+            return res.status(400).json({
+                message: 'Dados inválidos. Certifique-se de enviar usuarioId, produtos, quantidade e valorPedido.'
+            });
+        }
+
         const novoPedido = await pedidosService.criarPedido(req.body);
         res.status(201).json(novoPedido);
     } catch (error) {
-        res.status(500).json({ message: 'Erro ao criar pedido', error });
+        console.error('Erro ao criar pedido:', error);
+        res.status(500).json({ message: 'Erro ao criar pedido', error: error.message });
     }
 };
 
 const deletePedido = async (req, res) => {
     try {
-        const pedidoDeletado = await pedidosService.cancelarPedido(req.params.id);
+        const { id } = req.params;
+        if (isNaN(id)) {
+            return res.status(400).json({ message: 'ID do pedido inválido.' });
+        }
+
+        const pedidoDeletado = await pedidosService.cancelarPedido(id);
         if (!pedidoDeletado) {
             return res.status(404).json({ message: 'Pedido não encontrado' });
         }
         res.status(200).json({ message: 'Pedido deletado com sucesso' });
     } catch (error) {
-        res.status(500).json({ message: 'Erro ao deletar pedido', error });
+        console.error('Erro ao deletar pedido:', error);
+        res.status(500).json({ message: 'Erro ao deletar pedido', error: error.message });
     }
 };
 

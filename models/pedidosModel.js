@@ -1,21 +1,41 @@
 const db = require('../db');
 
-// Função para criar um novo pedido
 const createPedido = async (pedido) => {
-    const { usuarioId, produtoId, quantidade, valorPedido, status } = pedido;
-    const query = 'INSERT INTO pedidos (usuarioId, produtoId, quantidade, valorPedido, status) VALUES (?, ?, ?, ?, ?)';
+    const { usuarioId, produtos, quantidade, valorPedido, status } = pedido;
+
+    if (!Array.isArray(produtos) || produtos.length === 0) {
+        throw new Error('A lista de produtos é inválida ou está vazia.');
+    }
+
+    const queryPedido = 'INSERT INTO pedidos (usuarioId, quantidade, valorPedido, status) VALUES (?, ?, ?, ?)';
+    const queryProduto = 'INSERT INTO pedidos_produtos (pedidoId, produtoId) VALUES ?';
 
     try {
         const results = await new Promise((resolve, reject) => {
-            db.query(query, [usuarioId, produtoId, quantidade, valorPedido, status], (err, results) => {
+            db.query(queryPedido, [usuarioId, quantidade, valorPedido, status], (err, results) => {
                 if (err) {
                     return reject(err);
                 }
                 resolve(results);
             });
         });
-        return results.insertId;
+
+        const pedidoId = results.insertId;
+
+        // Inserir produtos associados ao pedido em lote
+        const values = produtos.map(produtoId => [pedidoId, produtoId]);
+        await new Promise((resolve, reject) => {
+            db.query(queryProduto, [values], (err, results) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(results);
+            });
+        });
+
+        return pedidoId;
     } catch (error) {
+        console.error('Erro ao criar pedido:', error.message);
         throw new Error('Erro ao criar pedido: ' + error.message);
     }
 };
@@ -41,5 +61,5 @@ const getPedidoById = async (id) => {
 
 module.exports = {
     createPedido,
-    getPedidoById
+    getPedidoById,
 };
