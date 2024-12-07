@@ -12,15 +12,15 @@ const getPedidoById = async (pedidoId) => {
 const criarPedido = async (body) => {
     const pedido = {
         usuarioId: body.usuarioId,
-        produtos: body.produtos, // Array de produtoId
+        produtos: body.produtos, // Array de objetos com produtoId e quantidade
         quantidade: body.quantidade,
         valorPedido: body.valorPedido,
         status: 'novo',
     };
 
     try {
-        const insertId = await pedidosModel.createPedido(pedido);
-        return { id: insertId, ...pedido };
+        const pedidoId = await pedidosModel.createPedido(pedido);
+        return { id: pedidoId, ...pedido };
     } catch (error) {
         console.error('Erro inesperado ao criar pedido:', error.message);
         throw new Error('Erro inesperado ao criar pedido: ' + error.message);

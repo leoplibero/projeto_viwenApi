@@ -8,7 +8,7 @@ const createPedido = async (pedido) => {
     }
 
     const queryPedido = 'INSERT INTO pedidos (usuarioId, quantidade, valorPedido, status) VALUES (?, ?, ?, ?)';
-    const queryProduto = 'INSERT INTO pedidos_produtos (pedidoId, produtoId) VALUES ?';
+    const queryProduto = 'INSERT INTO pedidos_produtos (pedidoId, produtoId, quantidade) VALUES ?';
 
     try {
         const results = await new Promise((resolve, reject) => {
@@ -22,8 +22,8 @@ const createPedido = async (pedido) => {
 
         const pedidoId = results.insertId;
 
-        // Inserir produtos associados ao pedido em lote
-        const values = produtos.map(produtoId => [pedidoId, produtoId]);
+        // Inserir produtos associados ao pedido em lote (com produtoId e quantidade)
+        const values = produtos.map(produto => [pedidoId, produto.produtoId, produto.quantidade]);
         await new Promise((resolve, reject) => {
             db.query(queryProduto, [values], (err, results) => {
                 if (err) {

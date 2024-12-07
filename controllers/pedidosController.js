@@ -21,9 +21,20 @@ const getPedidoById = async (req, res) => {
 const createPedido = async (req, res) => {
     try {
         const { usuarioId, produtos, quantidade, valorPedido } = req.body;
+
         if (!usuarioId || !Array.isArray(produtos) || produtos.length === 0 || !quantidade || !valorPedido) {
             return res.status(400).json({
                 message: 'Dados inválidos. Certifique-se de enviar usuarioId, produtos, quantidade e valorPedido.'
+            });
+        }
+
+        const produtosValidos = produtos.every(
+            produto => produto.produtoId && produto.quantidade
+        );
+
+        if (!produtosValidos) {
+            return res.status(400).json({
+                message: 'Cada produto deve conter produtoId e quantidade.'
             });
         }
 
