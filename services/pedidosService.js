@@ -2,8 +2,26 @@ const pedidosModel = require('../models/pedidosModel');
 
 const getPedidoById = async (pedidoId) => {
     try {
-        const pedido = await pedidosModel.getPedidoById(pedidoId);
-        return pedido;
+        const rows = await pedidosModel.getPedidoById(pedidoId);
+
+        if (rows.length === 0) {
+            return null;
+        }
+
+        const { id, usuarioId, quantidade, valorPedido, status } = rows[0];
+        const produtos = rows.map(row => ({
+            produtoId: row.produtoId,
+            quantidade: row.quantidadeProduto
+        }));
+
+        return {
+            id,
+            usuarioId,
+            quantidade,
+            valorPedido,
+            status,
+            produtos
+        };
     } catch (error) {
         throw new Error('Erro ao buscar pedido: ' + error.message);
     }
@@ -12,7 +30,7 @@ const getPedidoById = async (pedidoId) => {
 const criarPedido = async (body) => {
     const pedido = {
         usuarioId: body.usuarioId,
-        produtos: body.produtos, // Array de objetos com produtoId e quantidade
+        produtos: body.produtos, 
         quantidade: body.quantidade,
         valorPedido: body.valorPedido,
         status: 'novo',
@@ -30,11 +48,14 @@ const criarPedido = async (body) => {
 const cancelarPedido = async (pedidoId) => {
     try {
         const pedidoDeletado = await pedidosModel.deletePedido(pedidoId);
+
         if (!pedidoDeletado) {
-            throw new Error('Pedido não encontrado');
+            return null;
         }
+
         return pedidoDeletado;
     } catch (error) {
+        console.error('Erro ao cancelar pedido:', error.message);
         throw new Error('Erro ao cancelar pedido: ' + error.message);
     }
 };

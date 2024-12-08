@@ -22,7 +22,6 @@ const createPedido = async (pedido) => {
 
         const pedidoId = results.insertId;
 
-        // Inserir produtos associados ao pedido em lote (com produtoId e quantidade)
         const values = produtos.map(produto => [pedidoId, produto.produtoId, produto.quantidade]);
         await new Promise((resolve, reject) => {
             db.query(queryProduto, [values], (err, results) => {
@@ -40,26 +39,58 @@ const createPedido = async (pedido) => {
     }
 };
 
-// Função para obter um pedido pelo ID
 const getPedidoById = async (id) => {
-    const query = 'SELECT * FROM pedidos WHERE id = ?';
+    const queryPedido = `
+        SELECT p.id, p.usuarioId, p.quantidade, p.valorPedido, p.status, pp.produtoId, pp.quantidade AS quantidadeProduto
+        FROM pedidos p
+        LEFT JOIN pedidos_produtos pp ON p.id = pp.pedidoId
+        WHERE p.id = ?
+    `;
 
     try {
         const results = await new Promise((resolve, reject) => {
-            db.query(query, [id], (err, results) => {
+            db.query(queryPedido, [id], (err, results) => {
                 if (err) {
                     return reject(err);
                 }
                 resolve(results);
             });
         });
-        return results[0];
+
+        return results;
     } catch (error) {
         throw new Error('Erro ao buscar pedido: ' + error.message);
+    }
+};
+
+const deletePedido = async (pedidoId) => {
+    const query = 'DELETE FROM pedidos WHERE id = ?';
+
+    try {
+        const results = await new Promise((resolve, reject) => {
+            db.query(query, [pedidoId], (err, results) => {
+                if (err) {
+                    return reject(err);
+                }
+
+                // Verifica se algum registro foi afetado
+                if (results.affectedRows === 0) {
+                    return resolve(null);
+                }
+
+                resolve(true);
+            });
+        });
+
+        return results;
+    } catch (error) {
+        console.error('Erro ao deletar pedido:', error.message);
+        throw new Error('Erro ao deletar pedido: ' + error.message);
     }
 };
 
 module.exports = {
     createPedido,
     getPedidoById,
+    deletePedido
 };

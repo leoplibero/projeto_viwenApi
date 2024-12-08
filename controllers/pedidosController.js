@@ -11,6 +11,7 @@ const getPedidoById = async (req, res) => {
         if (!pedido) {
             return res.status(404).json({ message: 'Pedido não encontrado' });
         }
+
         res.status(200).json(pedido);
     } catch (error) {
         console.error('Erro ao buscar pedido:', error);
@@ -49,18 +50,22 @@ const createPedido = async (req, res) => {
 const deletePedido = async (req, res) => {
     try {
         const { id } = req.params;
+
+        // Verifica se o ID é válido
         if (isNaN(id)) {
             return res.status(400).json({ message: 'ID do pedido inválido.' });
         }
 
         const pedidoDeletado = await pedidosService.cancelarPedido(id);
+
         if (!pedidoDeletado) {
-            return res.status(404).json({ message: 'Pedido não encontrado' });
+            return res.status(404).json({ message: 'Pedido não encontrado.' });
         }
-        res.status(200).json({ message: 'Pedido deletado com sucesso' });
+
+        res.status(200).json({ message: 'Pedido deletado com sucesso.' });
     } catch (error) {
         console.error('Erro ao deletar pedido:', error);
-        res.status(500).json({ message: 'Erro ao deletar pedido', error: error.message });
+        res.status(500).json({ message: 'Erro ao deletar pedido.', error: error.message });
     }
 };
 
