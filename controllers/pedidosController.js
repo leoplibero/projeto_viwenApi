@@ -1,5 +1,15 @@
 const pedidosService = require('../services/pedidosService');
 
+const getAllPedidos = async (req, res) => {
+    try {
+        const pedidos = await pedidosService.getAllPedidos();
+        res.status(200).json(pedidos);
+    } catch (error) {
+        console.error('Erro ao buscar todos os pedidos:', error.message);
+        res.status(500).json({ message: 'Erro ao buscar todos os pedidos', error: error.message });
+    }
+};
+
 const getPedidoById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -72,5 +82,6 @@ const deletePedido = async (req, res) => {
 module.exports = {
     getPedidoById,
     createPedido,
-    deletePedido
+    deletePedido,
+    getAllPedidos
 };

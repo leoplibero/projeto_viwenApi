@@ -1,5 +1,35 @@
 const pedidosModel = require('../models/pedidosModel');
 
+const getAllPedidos = async () => {
+    try {
+        const pedidos = await pedidosModel.getAllPedidos();
+
+        const pedidosComProdutos = await Promise.all(
+            pedidos.map(async (pedido) => {
+                const pedidoDetalhado = await pedidosModel.getPedidoById(pedido.id);
+
+                const produtos = pedidoDetalhado.map(row => ({
+                    produtoId: row.produtoId,
+                    quantidade: row.quantidadeProduto,
+                }));
+
+                return {
+                    id: pedido.id,
+                    usuarioId: pedido.usuarioId,
+                    quantidade: pedido.quantidade,
+                    valorPedido: pedido.valorPedido,
+                    status: pedido.status,
+                    produtos,
+                };
+            })
+        );
+
+        return pedidosComProdutos;
+    } catch (error) {
+        throw new Error('Erro ao buscar todos os pedidos: ' + error.message);
+    }
+};
+
 const getPedidoById = async (pedidoId) => {
     try {
         const rows = await pedidosModel.getPedidoById(pedidoId);
@@ -64,4 +94,6 @@ module.exports = {
     getPedidoById,
     criarPedido,
     cancelarPedido,
+    getAllPedidos
 };
+    

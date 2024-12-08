@@ -63,6 +63,27 @@ const getPedidoById = async (id) => {
     }
 };
 
+const getAllPedidos = async () => {
+    const query = `
+        SELECT id, usuarioId, quantidade, valorPedido, status
+        FROM pedidos
+    `;
+
+    try {
+        const pedidos = await new Promise((resolve, reject) => {
+            db.query(query, (err, results) => {
+                if (err) return reject(err);
+                resolve(results);
+            });
+        });
+
+        return pedidos;
+    } catch (error) {
+        console.error('Erro ao buscar todos os pedidos:', error.message);
+        throw new Error('Erro ao buscar todos os pedidos: ' + error.message);
+    }
+};
+
 const deletePedido = async (pedidoId) => {
     const query = 'DELETE FROM pedidos WHERE id = ?';
 
@@ -73,7 +94,6 @@ const deletePedido = async (pedidoId) => {
                     return reject(err);
                 }
 
-                // Verifica se algum registro foi afetado
                 if (results.affectedRows === 0) {
                     return resolve(null);
                 }
@@ -92,5 +112,6 @@ const deletePedido = async (pedidoId) => {
 module.exports = {
     createPedido,
     getPedidoById,
-    deletePedido
+    deletePedido,
+    getAllPedidos,
 };

@@ -3,7 +3,7 @@ module.exports = function (app) {
     const produtoController = require('../controllers/produtosController.js');
     const pedidosController = require('../controllers/pedidosController.js');
     const clienteController = require('../controllers/clientesController.js');
-    const {autenticar} = require('../middleware.js');
+    const { autenticar } = require('../middleware.js');
 
     // Rotas de usuário
     app.get('/usuarios', usuarioController.getAllUsuarios); // usuario admin
@@ -16,9 +16,10 @@ module.exports = function (app) {
     // Rotas de produto
     app.get('/produtos', produtoController.getAllProdutos);
     app.get('/produtos/:id', produtoController.getProdutoById);
-    app.put('/produtos/:id', produtoController.updateStock); 
+    app.put('/produtos/:id', produtoController.updateStock);
 
     // Rotas de pedidos
+    app.get('/pedidos', pedidosController.getAllPedidos);
     app.get('/pedidos/:id', pedidosController.getPedidoById);
     app.post('/pedidos', pedidosController.createPedido);
     app.delete('/pedidos/:id', pedidosController.deletePedido);
